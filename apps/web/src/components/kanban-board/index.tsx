@@ -58,9 +58,12 @@ function KanbanBoard() {
       sourceColumn.tasks = sourceColumn.tasks.filter((t) => t.id !== activeId);
 
       if (sourceColumn.id === destinationColumn.id) {
-        const destinationIndex = destinationColumn.tasks.findIndex(
+        let destinationIndex = destinationColumn.tasks.findIndex(
           (t) => t.id === overId,
         );
+        if (sourceTaskIndex <= destinationIndex) {
+          destinationIndex += 1;
+        }
         destinationColumn.tasks.splice(destinationIndex, 0, task);
       } else {
         const updatedTask = { ...task, status: destinationColumn.id };
@@ -71,7 +74,7 @@ function KanbanBoard() {
             ? destinationColumn.tasks.length
             : destinationColumn.tasks.findIndex((t) => t.id === overId);
 
-        destinationColumn.tasks.splice(destinationIndex, 0, updatedTask);
+        destinationColumn.tasks.splice(destinationIndex + 1, 0, updatedTask);
       }
     });
 
