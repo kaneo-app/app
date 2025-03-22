@@ -76,6 +76,58 @@ volumes:
 | `JWT_ACCESS` | Secret key for generating JWT tokens |
 | `DB_PATH` | The path to the database file |
 
+## 🚢 Kubernetes Deployment
+
+Kaneo can also be deployed on Kubernetes using our Helm chart:
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/usekaneo/kaneo.git
+cd kaneo
+```
+
+2. Install the Helm chart:
+
+```bash
+helm install kaneo ./charts/kaneo --namespace kaneo --create-namespace
+```
+
+3. Access Kaneo:
+
+```bash
+# Port forward to access both services
+kubectl port-forward svc/kaneo-web 5173:80 -n kaneo &
+kubectl port-forward svc/kaneo-api 1337:1337 -n kaneo &
+
+# Access the application at http://localhost:5173
+# The web frontend will communicate with the API at http://localhost:1337
+```
+
+### Production Deployments
+
+For production environments, we recommend using Ingress to expose Kaneo:
+
+```bash
+# Basic installation with ingress
+helm install kaneo ./charts/kaneo \
+  --namespace kaneo \
+  --create-namespace \
+  --set ingress.enabled=true \
+  --set ingress.className=nginx \
+  --set "ingress.hosts[0].host=kaneo.example.com"
+```
+
+For detailed production deployment examples, including:
+
+- TLS configuration
+- Cert-manager integration
+- Path rewriting
+- Gateway API usage
+- Resource configuration
+
+Please refer to the [Helm chart documentation](./charts/kaneo/README.md).
+
 ## 📖 Documentation
 
 For detailed instructions and documentation, visit our [Documentation](https://kaneo.app/quick-start).
